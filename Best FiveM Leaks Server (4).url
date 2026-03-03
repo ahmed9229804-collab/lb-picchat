@@ -1,0 +1,115 @@
+RegisterNetEvent("lb-picchat:removeFriend", function(data)
+    debugprint("removeFriend", data)
+    SendReactMessage("removeFriend", data)
+end)
+
+RegisterNetEvent("lb-picchat:acceptFriend", function(friendData)
+    local locationData = friendData.location
+    if locationData then
+        friendData.location = FormatLocation(locationData)
+    end
+    debugprint("acceptFriend", friendData)
+    SendReactMessage("acceptFriend", friendData)
+end)
+
+RegisterNetEvent("lb-picchat:newFriendRequest", function(data)
+    debugprint("newFriendRequest", data)
+    SendReactMessage("newFriendRequest", data)
+end)
+
+RegisterNetEvent("lb-picchat:toggleSavePost", function(postId, saveState)
+    debugprint("toggleSavePost", postId, saveState)
+    SendReactMessage("toggleSave", {
+        id = postId,
+        state = saveState
+    })
+end)
+
+RegisterNetEvent("lb-picchat:postsOpened", function(data)
+    debugprint("postsOpened", data)
+    SendReactMessage("viewedPosts", data)
+end)
+
+RegisterNetEvent("lb-picchat:openedLastPost", function(data)
+    debugprint("openedLastPost", data)
+    SendReactMessage("openedLastPost", data)
+end)
+
+RegisterNetEvent("lb-picchat:newMessage", function(data)
+    debugprint("newMessage", data)
+    SendReactMessage("newMessage", data)
+end)
+
+RegisterNetEvent("lb-picchat:newPost", function(postData)
+    debugprint("newPost", postData)
+
+    local metadataToUse = postData.metadata
+    if type(postData.metadata) == "string" then
+        local decoded = json.decode(postData.metadata)
+        if decoded then
+            metadataToUse = decoded
+        end
+    end
+    postData.metadata = metadataToUse
+
+    SendReactMessage("newPost", postData)
+end)
+
+RegisterNetEvent("lb-picchat:newStory", function(username, storyId, storyLink)
+    debugprint("newStory", username, storyId, storyLink)
+    SendReactMessage("newStory", {
+        username = username,
+        id = storyId,
+        link = storyLink
+    })
+end)
+
+RegisterNetEvent("lb-picchat:passwordChanged", function(phoneNumber)
+    local lbPhoneExports = exports["lb-phone"]
+    local equippedPhoneNumber = lbPhoneExports.GetEquippedPhoneNumber(lbPhoneExports)
+    if equippedPhoneNumber == phoneNumber then
+        debugprint("passwordChanged, not logging out as number matches", phoneNumber)
+        return
+    end
+    SendReactMessage("logout")
+end)
+
+RegisterNetEvent("lb-picchat:accountDeleted", function(data)
+    SendReactMessage("accountDeleted", data)
+end)
+
+RegisterNetEvent("lb-picchat:toggleTyping", function(username, toggleState)
+    SendReactMessage("toggleTyping", {
+        username = username,
+        toggle = toggleState
+    })
+end)
+
+RegisterNetEvent("lb-picchat:toggleInChat", function(username, toggleState)
+    SendReactMessage("toggleInChat", {
+        username = username,
+        toggle = toggleState
+    })
+end)
+
+RegisterNetEvent("lb-picchat:updateLocation", function(username, locationData)
+    debugprint("updateLocation", username, locationData)
+    SendReactMessage("updateLocation", {
+        username = username,
+        location = FormatLocation(locationData)
+    })
+end)
+
+RegisterNetEvent("lb-picchat:removeLocation", function(username)
+    debugprint("removeLocation", username)
+    SendReactMessage("removeLocation", username)
+end)
+
+RegisterNetEvent("lb-picchat:updateLocations", function(locationsArray)
+    debugprint("updateLocations", locationsArray)
+    for i = 1, #locationsArray do
+        local locationEntry = locationsArray[i]
+        locationEntry.location = FormatLocation(locationEntry.location)
+    end
+    SendReactMessage("updateLocations", locationsArray)
+end)
