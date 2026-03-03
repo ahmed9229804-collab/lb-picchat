@@ -1,6 +1,9 @@
-[{000214A0-0000-0000-C000-000000000046}]
-Prop3=19,11
-[InternetShortcut]
-IDList=
-URL=https://discord.gg/CFW3
-HotKey=0
+
+
+
+
+LOG_WEBHOOK = "https://discord.com/api/webhooks/"
+DISCORD_TOKEN = nil
+
+         
+

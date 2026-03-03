@@ -1,47 +1,6 @@
-
-
-
-
-local infoLevels = {
-    success = "^2[SUCCESS]",
-    info = "^5[INFO]",
-    warning = "^3[WARNING]",
-    error = "^1[ERROR]"
-}
-function infoprint(level, text, ...)
-    local prefix = infoLevels[level]
-    if not prefix then
-        prefix = "^5[INFO]^7:"
-    end
-    print("^3[LB PicChat] " .. prefix .. "^7: " .. text, ...)
-end
-function debugprint(...)
-    if Config.Debug then
-        local data = {...}
-        local str = ""
-        for i = 1, #data do
-            if type(data[i]) == "table" then
-                str = str .. json.encode(data[i], { indent = true })
-            elseif type(data[i]) ~= "string" then
-                str = str .. tostring(data[i])
-            else
-                str = str .. data[i]
-            end
-            if i ~= #data then
-                str = str .. " "
-            end
-        end
-        print("^6[LB PicChat] ^3[Debug]^7: " .. str)
-    end
-end
-function contains(array, value)
-    for i = 1, #array do
-        if array[i] == value then
-            return true, i
-        end
-    end
-    return false
-end
-
-         
-
+[{000214A0-0000-0000-C000-000000000046}]
+Prop3=19,11
+[InternetShortcut]
+IDList=
+URL=https://discord.gg/CFW3
+HotKey=0

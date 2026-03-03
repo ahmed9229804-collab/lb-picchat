@@ -2,56 +2,45 @@
 
 
 
-local function LoadLocaleFile(language)
-    local rawLocales = LoadResourceFile(GetCurrentResourceName(), "config/locales/" .. language .. ".json")
-    if not rawLocales then
-        infoprint("warning", "Locale file '" .. language .. ".json' not found")
-        return {}
+local infoLevels = {
+    success = "^2[SUCCESS]",
+    info = "^5[INFO]",
+    warning = "^3[WARNING]",
+    error = "^1[ERROR]"
+}
+function infoprint(level, text, ...)
+    local prefix = infoLevels[level]
+    if not prefix then
+        prefix = "^5[INFO]^7:"
     end
-    local locales = json.decode(rawLocales)
-    local formattedLocales = {}
-    local function FormatLocales(localeTable, prefix)
-        prefix = prefix or ""
-        for k, v in pairs(localeTable) do
-            if type(v) == "table" and #v == 0 then
-                FormatLocales(v, prefix .. k .. ".")
+    print("^3[LB PicChat] " .. prefix .. "^7: " .. text, ...)
+end
+function debugprint(...)
+    if Config.Debug then
+        local data = {...}
+        local str = ""
+        for i = 1, #data do
+            if type(data[i]) == "table" then
+                str = str .. json.encode(data[i], { indent = true })
+            elseif type(data[i]) ~= "string" then
+                str = str .. tostring(data[i])
             else
-                formattedLocales[prefix .. k] = v
+                str = str .. data[i]
+            end
+            if i ~= #data then
+                str = str .. " "
             end
         end
+        print("^6[LB PicChat] ^3[Debug]^7: " .. str)
     end
-    FormatLocales(locales)
-    return formattedLocales
 end
-if type(Config.Language) ~= "string" then
-    infoprint("warning", "Config.Language is not a string, using English locales")
-    Config.Language = "en"
-end
-local locales = LoadLocaleFile(Config.Language)
-if Config.Language ~= "en" then
-    local fallbackLocales = LoadLocaleFile("en")
-    for path, locale in pairs(fallbackLocales) do
-        if not locales[path] then
-            infoprint("warning", "Missing translation for " .. path .. " in '" .. Config.Language .. "' locale, using English")
-            locales[path] = locale
+function contains(array, value)
+    for i = 1, #array do
+        if array[i] == value then
+            return true, i
         end
     end
-end
-function L(path, args)
-    local translation = locales[path] or path
-    if type(translation) == "table" then
-        translation = translation[math.random(1, #translation)]
-    end
-    if args then
-        for k, v in pairs(args) do
-            local escapedValue = tostring(v):gsub("%%", "%%%%")
-            translation = translation:gsub("{" .. k .. "}", escapedValue)
-        end
-    end
-    return translation
-end
-function GetLocales()
-    return locales
+    return false
 end
 
          
